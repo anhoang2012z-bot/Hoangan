@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bạn có thích mèo không?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #1e1e2f;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            text-align: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            max-width: 90%;
+            width: 400px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #f1f5f9;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        .btn-no {
+            background: #ef4444;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        #result-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            background-color: black;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #result-img {
+            max-width: 80%;
+            max-height: 70vh;
+            border-radius: 15px;
+            object-fit: contain;
+            margin-bottom: 20px;
+        }
+        #result-text {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .shake {
+            animation: shakeAnim 0.08s infinite alternate;
+        }
+        @keyframes shakeAnim {
+            0% { transform: translate(5px, 5px) rotate(1deg); }
+            100% { transform: translate(-5px, -5px) rotate(-1deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="quiz">
+        <h1>Bạn có thích mèo không? 🐱</h1>
+        <div class="btn-group">
+            <button class="btn" onclick="showCat(true)">Có 🥰</button>
+            <button class="btn btn-no" onclick="showCat(false)">Không 😾</button>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <img id="result-img" src="" alt="Cat">
+        <div id="result-text"></div>
+    </div>
+
+    <!-- Âm thanh mèo kêu meo meo và mèo gừ gừ -->
+    <audio id="meow-audio" src="https://www.myinstants.com/media/sounds/meow.mp3" preload="auto"></audio>
+    <audio id="growl-audio" src="https://www.myinstants.com/media/sounds/cat-growling.mp3" preload="auto" loop></audio>
+
+    <script>
+        function showCat(isLiked) {
+            document.getElementById('quiz').style.display = 'none';
+            const screen = document.getElementById('result-screen');
+            const img = document.getElementById('result-img');
+            const text = document.getElementById('result-text');
+            
+            screen.style.display = 'flex';
+
+            if (isLiked) {
+                // Thích -> Mèo cute, kêu meo meo
+                img.src = "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=1000&auto=format&fit=crop";
+                text.innerText = "Meo meo... dễ thương chưa nè! 🐾";
+                text.style.color = "#34d399";
+                
+                const audio = document.getElementById('meow-audio');
+                audio.volume = 1.0;
+                audio.play().catch(e => console.log(e));
+            } else {
+                // Không thích -> Mèo đáng sợ, gừ gừ, màn hình rung lắc
+                img.src = "https://images.unsplash.com/photo-1543852786-1cf6624b9987?q=80&w=1000&auto=format&fit=crop";
+                text.innerText = "Gừ gừ... dám bảo không thích à! 😾🔪";
+                text.style.color = "#f87171";
+                screen.classList.add('shake');
+
+                const audio = document.getElementById('growl-audio');
+                audio.volume = 1.0;
+                audio.play().catch(e => console.log(e));
+
+                if ("vibrate" in navigator) {
+                    navigator.vibrate([500, 100, 500, 100, 800]);
+                }
+            }
+
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(() => {});
+   
